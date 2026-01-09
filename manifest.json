@@ -1,21 +1,12 @@
 {
-  "name": "Finance Tracker",
-  "short_name": "Finance",
-  "start_url": "./index.html",
+  "background_color": "#ffffff",
+  "dir": "ltr",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#00ffff",
-  "description": "Track income and expenses easily",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  "name": "thekritcher.github",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "thekritcher.github",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "description": "A web manifest is a JSON text file that provides information about a web app."
 }
