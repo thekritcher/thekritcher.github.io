@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance Tracker</title>
+<style>
+body { background: #000; color: #fff; font-family: sans-serif; padding: 20px; }
+input, select, button { display: block; margin: 10px 0; padding: 8px; width: 100%; }
+.card { background: #222; padding: 10px; margin: 10px 0; border-radius: 5px; }
+.income { color: #0f0; }
+.expense { color: #f00; }
+</style>
+</head>
+<body>
+
+<h1>Finance Tracker</h1>
+
+<div class="card">
+  <div>Total Income: $<span id="totalIncome">0</span></div>
+  <div>One-Time Expenses: $<span id="oneTime">0</span></div>
+  <div>Monthly Obligations: $<span id="monthly">0</span></div>
+  <div>Net Balance: $<span id="netBalance">0</span></div>
+</div>
+
+<input type="text" id="label" placeholder="Income/Expense Label">
+<input type="number" id="amount" placeholder="Amount">
+
+<select id="category">
+  <option>Food</option><option>Rent</option><option>Bills</option><option>Loans</option>
+  <option>Salary</option><option>Freelance</option><option>Shopping</option>
+  <option>Transport</option><option>Subscriptions</option><option>Other</option>
+</select>
+
+<label><input type="checkbox" id="monthly"> Monthly</label>
+<label><input type="checkbox" id="isIncome" checked> Income</label>
+
+<button onclick="addTransaction()">Add Transaction</button>
+
+<h2>Transactions</h2>
+<div id="transactionsList"></div>
+
+<script>
+let transactions = JSON.parse(localStorage.getItem("transactions")||"[]");
+
+function save() { localStorage.setItem("transactions", JSON.stringify(transactions)); }
+function updateUI() {
+    let totalIncome = 0, oneTime = 0, monthly = 0;
+    let list = document.getElementById("transactionsList");
+    list.innerHTML = "";
+    transactions.slice().reverse().forEach(t=>{
+        if(t.isIncome) totalIncome+=t.amount;
+        else if(t.monthly) monthly+=t.amount;
+        else oneTime+=t.amount;
+        let div = document.createElement("div");
+        div.className="card";
+        div.innerHTML=`${t.label} | $${t.amount} | ${t.category} | ${t.isIncome?"Income":"Expense"} | ${t.monthly?"Monthly":"One-time"}`;
+        div.style.color = t.isIncome?"#0f0":"#f00";
+        list.appendChild(div);
+    });
+    document.getElementById("totalIncome").textContent = totalIncome.toFixed(2);
+    document.getElementById("oneTime").textContent = oneTime.toFixed(2);
+    document.getElementById("monthly").textContent = monthly.toFixed(2);
+    document.getElementById("netBalance").textContent = (totalIncome-(oneTime+monthly)).toFixed(2);
+}
+
+function addTransaction(){
+    let label = document.getElementById("label").value;
+    let amount = parseFloat(document.getElementById("amount").value);
+    let category = document.getElementById("category").value;
+    let monthly = document.getElementById("monthly").checked;
+    let isIncome = document.getElementById("isIncome").checked;
+    if(!label||!amount) return;
+    transactions.push({label, amount, category, monthly, isIncome});
+    save();
+    updateUI();
+    document.getElementById("label").value="";
+    document.getElementById("amount").value="";
+}
+
+updateUI();
+</script>
+</body>
+</html>
